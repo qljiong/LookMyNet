@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 
@@ -15,10 +9,160 @@ namespace LookMyNet
 {
     public partial class LookNetBar : Form
     {
+        #region 初始化
+        /// <summary>
+        /// 必需的设计器变量。
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// 自定义添加的控件
+        /// </summary>
+        private System.Windows.Forms.ListBox AdapterList;
+        private System.Windows.Forms.Timer Timepiece;
+        private System.Windows.Forms.TextBox textBox_Down;
+        private System.Windows.Forms.TextBox textBox_Up;
+        private System.Windows.Forms.ContextMenuStrip RightClickMenu;
+        private System.Windows.Forms.ToolStripMenuItem CloseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MinToTaskbarToolStripMenuItem;
+
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.AdapterList = new System.Windows.Forms.ListBox();
+            this.Timepiece = new System.Windows.Forms.Timer(this.components);
+            this.textBox_Down = new System.Windows.Forms.TextBox();
+            this.textBox_Up = new System.Windows.Forms.TextBox();
+            this.RightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MinToTaskbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.RightClickMenu.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // AdapterList
+            // 
+            this.AdapterList.FormattingEnabled = true;
+            this.AdapterList.ItemHeight = 12;
+            this.AdapterList.Location = new System.Drawing.Point(59, 12);
+            this.AdapterList.Name = "AdapterList";
+            this.AdapterList.Size = new System.Drawing.Size(198, 40);
+            this.AdapterList.TabIndex = 0;
+            this.AdapterList.SelectedIndexChanged += new System.EventHandler(this.AdepterList_SelectedIndexChanged);
+            this.AdapterList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
+            this.AdapterList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
+            // 
+            // Timepiece
+            // 
+            this.Timepiece.Tick += new System.EventHandler(this.Timepiece_Tick);
+            // 
+            // textBox_Down
+            // 
+            this.textBox_Down.Enabled = false;
+            this.textBox_Down.Location = new System.Drawing.Point(59, 58);
+            this.textBox_Down.Name = "textBox_Down";
+            this.textBox_Down.Size = new System.Drawing.Size(198, 21);
+            this.textBox_Down.TabIndex = 1;
+            this.textBox_Down.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
+            this.textBox_Down.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
+            // 
+            // textBox_Up
+            // 
+            this.textBox_Up.Enabled = false;
+            this.textBox_Up.Location = new System.Drawing.Point(59, 85);
+            this.textBox_Up.Name = "textBox_Up";
+            this.textBox_Up.Size = new System.Drawing.Size(198, 21);
+            this.textBox_Up.TabIndex = 2;
+            this.textBox_Up.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
+            this.textBox_Up.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
+            // 
+            // RightClickMenu
+            // 
+            this.RightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CloseToolStripMenuItem,
+            this.MinToTaskbarToolStripMenuItem});
+            this.RightClickMenu.Name = "RightClickMenu";
+            this.RightClickMenu.Size = new System.Drawing.Size(149, 48);
+            // 
+            // CloseToolStripMenuItem
+            // 
+            this.CloseToolStripMenuItem.Name = "CloseToolStripMenuItem";
+            this.CloseToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.CloseToolStripMenuItem.Text = "关闭";
+            this.CloseToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
+            // 
+            // MinToTaskbarToolStripMenuItem
+            // 
+            this.MinToTaskbarToolStripMenuItem.Name = "MinToTaskbarToolStripMenuItem";
+            this.MinToTaskbarToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.MinToTaskbarToolStripMenuItem.Text = "缩小到任务栏";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(29, 12);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "下行";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(10, 88);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "上行";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(10, 22);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 12);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "网卡";
+            // 
+            // LookNetBar
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.ClientSize = new System.Drawing.Size(269, 121);
+            this.ContextMenuStrip = this.RightClickMenu;
+            this.ControlBox = false;
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox_Up);
+            this.Controls.Add(this.textBox_Down);
+            this.Controls.Add(this.AdapterList);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "LookNetBar";
+            this.Opacity = 0.8D;
+            this.ShowIcon = false;
+            this.Text = "LookNetBar";
+            this.TopMost = true;
+            this.Load += new System.EventHandler(this.LookNetBar_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
+            this.RightClickMenu.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        } 
+        #endregion
+
         public LookNetBar()
         {
             InitializeComponent();
         }
+
         private MyNetWorkMatchClass[] m_MNWMadapters;
         private MyNetWorkMonitor monitor;
         private void LookNetBar_Load(object sender, EventArgs e)
@@ -29,7 +173,7 @@ namespace LookMyNet
             if (m_MNWMadapters.Length == 0)
             {
                 AdapterList.Enabled = false;
-                MessageBox.Show("在计算机上没有找到网络适配器");
+                textBox_Down.Text = "没找到网卡";
                 return;
             }
 
@@ -77,11 +221,16 @@ namespace LookMyNet
         }
         #endregion
 
+        
+
         #region 右键菜单
-
-        #endregion
-
-        #region 缩小到状态栏
+        //关闭
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            this.Dispose();
+        }
+        //缩小到任务栏
 
         #endregion
     }
