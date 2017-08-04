@@ -121,6 +121,7 @@ namespace LookMyNet
             this.Name = "LookNetBar";
             this.Opacity = 0.8D;
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "LookNetBar";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.LookNetBar_Load);
@@ -143,6 +144,10 @@ namespace LookMyNet
         private int adapterIndex;
         private void LookNetBar_Load(object sender, EventArgs e)
         {
+            //默认位置在屏幕右下角
+            this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width;
+            this.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
+
             monitor = new MyNetWorkMonitor();
             //获得控制器MyNetWorkMonitor上所有计算机的适配器列表
             m_MNWMadapters = monitor.Adapters;
