@@ -155,7 +155,7 @@ namespace LookMyNet
             this.ResumeLayout(false);
             this.PerformLayout();
 
-        } 
+        }
         #endregion
 
         public LookNetBar()
@@ -221,7 +221,7 @@ namespace LookMyNet
         }
         #endregion
 
-        
+
 
         #region 右键菜单
         //关闭
@@ -276,7 +276,7 @@ namespace LookMyNet
             {
                 if (InstanceName == "MS TCP Loopback interface")
                     continue;
-                //  创建一个实例Net workAdapter类别，并创建性能计数器它。
+                // 创建一个实例Net workAdapter类别，并创建性能计数器。
                 MyNetWorkMatchClass myMNWMadapter = new MyNetWorkMatchClass(InstanceName);
                 myMNWMadapter.m_Performance_Down = new PerformanceCounter("Network Interface", "Bytes Received/sec", InstanceName);
                 myMNWMadapter.m_Performance_Up = new PerformanceCounter("Network Interface", "Bytes Sent/sec", InstanceName);
@@ -369,7 +369,7 @@ namespace LookMyNet
         {
             get
             {
-                return this.m_lUpLoadSpeed / 1024.0;
+                return this.m_lDownLoadSpeed / 1024.0;
             }
         }
 
