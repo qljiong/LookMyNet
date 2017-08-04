@@ -44,11 +44,13 @@ namespace LookMyNet
             // 
             // AdapterList
             // 
+            this.AdapterList.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.AdapterList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.AdapterList.FormattingEnabled = true;
             this.AdapterList.ItemHeight = 12;
-            this.AdapterList.Location = new System.Drawing.Point(59, 12);
+            this.AdapterList.Location = new System.Drawing.Point(42, 7);
             this.AdapterList.Name = "AdapterList";
-            this.AdapterList.Size = new System.Drawing.Size(198, 40);
+            this.AdapterList.Size = new System.Drawing.Size(171, 36);
             this.AdapterList.TabIndex = 0;
             this.AdapterList.SelectedIndexChanged += new System.EventHandler(this.AdepterList_SelectedIndexChanged);
             this.AdapterList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
@@ -60,20 +62,24 @@ namespace LookMyNet
             // 
             // textBox_Down
             // 
+            this.textBox_Down.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.textBox_Down.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_Down.Enabled = false;
-            this.textBox_Down.Location = new System.Drawing.Point(59, 58);
+            this.textBox_Down.Location = new System.Drawing.Point(42, 55);
             this.textBox_Down.Name = "textBox_Down";
-            this.textBox_Down.Size = new System.Drawing.Size(198, 21);
+            this.textBox_Down.Size = new System.Drawing.Size(66, 14);
             this.textBox_Down.TabIndex = 1;
             this.textBox_Down.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
             this.textBox_Down.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
             // 
             // textBox_Up
             // 
+            this.textBox_Up.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.textBox_Up.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_Up.Enabled = false;
-            this.textBox_Up.Location = new System.Drawing.Point(59, 85);
+            this.textBox_Up.Location = new System.Drawing.Point(147, 55);
             this.textBox_Up.Name = "textBox_Up";
-            this.textBox_Up.Size = new System.Drawing.Size(198, 21);
+            this.textBox_Up.Size = new System.Drawing.Size(66, 14);
             this.textBox_Up.TabIndex = 2;
             this.textBox_Up.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
             this.textBox_Up.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
@@ -102,7 +108,7 @@ namespace LookMyNet
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 61);
+            this.label1.Location = new System.Drawing.Point(7, 54);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 12);
             this.label1.TabIndex = 3;
@@ -111,7 +117,7 @@ namespace LookMyNet
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 88);
+            this.label2.Location = new System.Drawing.Point(112, 54);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 12);
             this.label2.TabIndex = 3;
@@ -120,7 +126,7 @@ namespace LookMyNet
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 22);
+            this.label3.Location = new System.Drawing.Point(7, 17);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 3;
@@ -131,7 +137,7 @@ namespace LookMyNet
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.ClientSize = new System.Drawing.Size(269, 121);
+            this.ClientSize = new System.Drawing.Size(223, 80);
             this.ContextMenuStrip = this.RightClickMenu;
             this.ControlBox = false;
             this.Controls.Add(this.label3);
@@ -196,9 +202,9 @@ namespace LookMyNet
             //该适配器
             MyNetWorkMatchClass adapter = m_MNWMadapters[AdapterList.SelectedIndex];
             //得到该适配器的下载速度
-            textBox_Down.Text = String.Format("{0:n} kbps", adapter.DownloadSpeedKbps);
+            textBox_Down.Text = adapter.DownloadSpeedKbps;
             //得到该适配器的上传速度
-            textBox_Up.Text = String.Format("{0:n} kbps", adapter.UploadSpeedKbps);
+            textBox_Up.Text = adapter.UploadSpeedKbps;
         }
 
         #region 窗体内可拖动
@@ -365,19 +371,33 @@ namespace LookMyNet
                 return m_lUpLoadSpeed;
             }
         }
-        public double DownloadSpeedKbps
+        public string DownloadSpeedKbps
         {
             get
             {
-                return this.m_lDownLoadSpeed / 1024.0;
+                if (m_lDownLoadSpeed > 1024 * 1024)
+                {
+                    return String.Format("{0:n} mbps", this.m_lDownLoadSpeed / 1024.0 / 1024.0);
+                }
+                else
+                {
+                    return String.Format("{0:n} kbps", this.m_lDownLoadSpeed / 1024.0);
+                }
             }
         }
 
-        public double UploadSpeedKbps
+        public string UploadSpeedKbps
         {
             get
             {
-                return this.m_lUpLoadSpeed / 1024.0;
+                if (m_lUpLoadSpeed > 1024 * 1024)
+                {
+                    return String.Format("{0:n} mbps", this.m_lUpLoadSpeed / 1024.0 / 1024.0);
+                }
+                else
+                {
+                    return String.Format("{0:n} kbps", this.m_lUpLoadSpeed / 1024.0);
+                }
             }
         }
         //当前的下载速度,字节计算
