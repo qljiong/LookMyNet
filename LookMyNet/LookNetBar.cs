@@ -25,6 +25,7 @@ namespace LookMyNet
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LookNetBar));
             this.Timepiece = new System.Windows.Forms.Timer(this.components);
             this.textBox_Down = new System.Windows.Forms.TextBox();
             this.textBox_Up = new System.Windows.Forms.TextBox();
@@ -116,6 +117,7 @@ namespace LookMyNet
             this.Controls.Add(this.textBox_Up);
             this.Controls.Add(this.textBox_Down);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "LookNetBar";
