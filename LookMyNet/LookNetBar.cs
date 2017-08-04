@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
+using System.Net.NetworkInformation;
 using System.Timers;
 using System.Windows.Forms;
 
@@ -14,11 +15,6 @@ namespace LookMyNet
         /// 必需的设计器变量。
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// 自定义添加的控件
-        /// </summary>
-        private System.Windows.Forms.ListBox AdapterList;
         private System.Windows.Forms.Timer Timepiece;
         private System.Windows.Forms.TextBox textBox_Down;
         private System.Windows.Forms.TextBox textBox_Up;
@@ -29,7 +25,6 @@ namespace LookMyNet
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.AdapterList = new System.Windows.Forms.ListBox();
             this.Timepiece = new System.Windows.Forms.Timer(this.components);
             this.textBox_Down = new System.Windows.Forms.TextBox();
             this.textBox_Up = new System.Windows.Forms.TextBox();
@@ -38,23 +33,8 @@ namespace LookMyNet
             this.MinToTaskbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.RightClickMenu.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // AdapterList
-            // 
-            this.AdapterList.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.AdapterList.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.AdapterList.FormattingEnabled = true;
-            this.AdapterList.ItemHeight = 12;
-            this.AdapterList.Location = new System.Drawing.Point(42, 7);
-            this.AdapterList.Name = "AdapterList";
-            this.AdapterList.Size = new System.Drawing.Size(171, 36);
-            this.AdapterList.TabIndex = 0;
-            this.AdapterList.SelectedIndexChanged += new System.EventHandler(this.AdepterList_SelectedIndexChanged);
-            this.AdapterList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
-            this.AdapterList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
             // 
             // Timepiece
             // 
@@ -65,7 +45,7 @@ namespace LookMyNet
             this.textBox_Down.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox_Down.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_Down.Enabled = false;
-            this.textBox_Down.Location = new System.Drawing.Point(42, 55);
+            this.textBox_Down.Location = new System.Drawing.Point(40, 14);
             this.textBox_Down.Name = "textBox_Down";
             this.textBox_Down.Size = new System.Drawing.Size(66, 14);
             this.textBox_Down.TabIndex = 1;
@@ -77,7 +57,7 @@ namespace LookMyNet
             this.textBox_Up.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox_Up.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_Up.Enabled = false;
-            this.textBox_Up.Location = new System.Drawing.Point(147, 55);
+            this.textBox_Up.Location = new System.Drawing.Point(145, 14);
             this.textBox_Up.Name = "textBox_Up";
             this.textBox_Up.Size = new System.Drawing.Size(66, 14);
             this.textBox_Up.TabIndex = 2;
@@ -108,7 +88,7 @@ namespace LookMyNet
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 54);
+            this.label1.Location = new System.Drawing.Point(5, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 12);
             this.label1.TabIndex = 3;
@@ -117,35 +97,24 @@ namespace LookMyNet
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(112, 54);
+            this.label2.Location = new System.Drawing.Point(110, 13);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 12);
             this.label2.TabIndex = 3;
             this.label2.Text = "上行";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 17);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 12);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "网卡";
             // 
             // LookNetBar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.ClientSize = new System.Drawing.Size(223, 80);
+            this.ClientSize = new System.Drawing.Size(223, 33);
             this.ContextMenuStrip = this.RightClickMenu;
             this.ControlBox = false;
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox_Up);
             this.Controls.Add(this.textBox_Down);
-            this.Controls.Add(this.AdapterList);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -171,6 +140,7 @@ namespace LookMyNet
 
         private MyNetWorkMatchClass[] m_MNWMadapters;
         private MyNetWorkMonitor monitor;
+        private int adapterIndex;
         private void LookNetBar_Load(object sender, EventArgs e)
         {
             monitor = new MyNetWorkMonitor();
@@ -178,29 +148,44 @@ namespace LookMyNet
             m_MNWMadapters = monitor.Adapters;
             if (m_MNWMadapters.Length == 0)
             {
-                AdapterList.Enabled = false;
                 textBox_Down.Text = "没找到网卡";
                 return;
             }
 
-            AdapterList.Items.AddRange(m_MNWMadapters);
+            //选择正在使用的网卡
+            NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface ni in interfaces)
+            {
+                if (ni.OperationalStatus == OperationalStatus.Up)
+                {
+                    adapterIndex = -1;
+                    foreach (var item in m_MNWMadapters)
+                    {
+                        adapterIndex += 1;
+                        if (item.strMatchName == ni.Description)
+                        {
+                            //控制该适配器开始工作
+                            monitor.StartMonitoring(item);
+                            //计时开始
+                            this.Timepiece.Start();
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         //选中其中一个适配器
         private void AdepterList_SelectedIndexChanged(object sender, EventArgs e)
         {
             monitor.StopMonitoring();
-            //控制该适配器开始工作
-            monitor.StartMonitoring(m_MNWMadapters[AdapterList.SelectedIndex]);
-            //计时开始
-            this.Timepiece.Start();
         }
 
         //计时开始,用于每秒钟改变显示速度
         private void Timepiece_Tick(object sender, EventArgs e)
         {
             //该适配器
-            MyNetWorkMatchClass adapter = m_MNWMadapters[AdapterList.SelectedIndex];
+            MyNetWorkMatchClass adapter = m_MNWMadapters[adapterIndex];
             //得到该适配器的下载速度
             textBox_Down.Text = adapter.DownloadSpeedKbps;
             //得到该适配器的上传速度
