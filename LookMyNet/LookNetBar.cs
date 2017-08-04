@@ -78,40 +78,49 @@ namespace LookMyNet
         #endregion
 
         #region 右键菜单
-        
+
         #endregion
 
         #region 缩小到状态栏
-        
+
         #endregion
     }
     public class MyNetWorkMonitor
     {
-        private System.Timers.Timer Monitor_Timer;              // 计时器事件执行每秒钟刷新值在适配器。
-        private ArrayList m_AdaptersList;        //该计算机的适配器列表。
-        private ArrayList m_MonitoredAdapters;      //目前控制的适配器列表
+        // 计时器事件执行每秒钟刷新值在适配器。
+        private System.Timers.Timer Monitor_Timer;
+        //该计算机的适配器列表。
+        private ArrayList m_AdaptersList;
+        //目前控制的适配器列表
+        private ArrayList m_MonitoredAdapters;
 
         public MyNetWorkMonitor()
         {
-            m_AdaptersList = new ArrayList();          //用来保存获取到的计算机的适配器列表
-            m_MonitoredAdapters = new ArrayList();         //运行的有效的适配器列表
+            //用来保存获取到的计算机的适配器列表
+            m_AdaptersList = new ArrayList();
+            //运行的有效的适配器列表
+            m_MonitoredAdapters = new ArrayList();
 
-
-            ShowNetAdapter();                                //列举出安装在该计算机上面的适配器
+            //列举出安装在该计算机上面的适配器
+            ShowNetAdapter();
             Monitor_Timer = new System.Timers.Timer(1000);
             Monitor_Timer.Elapsed += new ElapsedEventHandler(timer_ElapsedClick);
         }
-        private void timer_ElapsedClick(object sender, ElapsedEventArgs e)     //用于每秒钟刷新速度      
+
+        //用于每秒钟刷新速度
+        private void timer_ElapsedClick(object sender, ElapsedEventArgs e)
         {
-            foreach (MyNetWorkMatchClass adapter in m_MonitoredAdapters)       //每秒钟遍历有效的网络适配器
+            //每秒钟遍历有效的网络适配器
+            foreach (MyNetWorkMatchClass adapter in m_MonitoredAdapters)
             {
-                adapter.CaculateAndRefresh();                                           //刷新上传下载速度                        
+                //刷新上传下载速度
+                adapter.CaculateAndRefresh();
             }
 
         }
 
-
-        private void ShowNetAdapter()    //列举出安装在该计算机上面的适配器方法
+        //列举出安装在该计算机上面的适配器方法
+        private void ShowNetAdapter()
         {
             PerformanceCounterCategory PCCCategory = new PerformanceCounterCategory("Network Interface");
             foreach (string InstanceName in PCCCategory.GetInstanceNames())
@@ -143,12 +152,14 @@ namespace LookMyNet
             }
         }
 
-        public void StartMonitoring(MyNetWorkMatchClass myMNWMadapter)     //控制该适配器开始工作
+        //控制该适配器开始工作
+        public void StartMonitoring(MyNetWorkMatchClass myMNWMadapter)
         {
             if (!m_MonitoredAdapters.Contains(myMNWMadapter))
             {
                 m_MonitoredAdapters.Add(myMNWMadapter);
-                myMNWMadapter.Start();                           //该适配器调用自己函数开始工作      
+                //该适配器调用自己函数开始工作
+                myMNWMadapter.Start();
             }
             Monitor_Timer.Enabled = true;
         }
@@ -167,7 +178,8 @@ namespace LookMyNet
                 Monitor_Timer.Enabled = false;
         }
 
-        public MyNetWorkMatchClass[] Adapters                //该控制类所控制的找出所有适配器的适配器列表
+        //该控制类所控制的找出所有适配器的适配器列表
+        public MyNetWorkMatchClass[] Adapters
         {
             get
             {
@@ -219,17 +231,26 @@ namespace LookMyNet
                 return this.m_lUpLoadSpeed / 1024.0;
             }
         }
-        private long m_lDownLoadNetValues1;           //当前的下载速度,字节计算
-        private long m_lUploadNetValues1;             //当前的上传速度
-        private long m_lDownLoadNetValues2;           //一秒前的下载速度,字节计算
-        private long m_lUploadNetValues2;             //一秒前的上传速度
+        //当前的下载速度,字节计算
+        private long m_lDownLoadNetValues1;
+        //当前的上传速度
+        private long m_lUploadNetValues1;
+        //一秒前的下载速度,字节计算
+        private long m_lDownLoadNetValues2;
+        //一秒前的上传速度
+        private long m_lUploadNetValues2;
 
-        private string m_strMatchName;     //此适配器的名字
-        internal PerformanceCounter m_Performance_Down;    //控制下载速度的流量计算中心
-        internal PerformanceCounter m_Performance_Up;     // //控制上传速度的流量计算中心
+        //此适配器的名字
+        private string m_strMatchName;
+        //控制下载速度的流量计算中心
+        internal PerformanceCounter m_Performance_Down;
+        // //控制上传速度的流量计算中心
+        internal PerformanceCounter m_Performance_Up;
 
-        private long m_lDownLoadSpeed;      //每秒钟下载速度
-        private long m_lUpLoadSpeed;          //每秒钟上传速度
+        //每秒钟下载速度
+        private long m_lDownLoadSpeed;
+        //每秒钟上传速度
+        private long m_lUpLoadSpeed;
         public MyNetWorkMatchClass(string strComputerNetName)
         {
             m_lDownLoadNetValues1 = 0;
@@ -247,7 +268,8 @@ namespace LookMyNet
 
         }
 
-        public void CaculateAndRefresh()                //计算速度
+        //计算速度
+        public void CaculateAndRefresh()
         {
             m_lDownLoadNetValues2 = m_Performance_Down.NextSample().RawValue;
             m_lUploadNetValues2 = m_Performance_Up.NextSample().RawValue;
