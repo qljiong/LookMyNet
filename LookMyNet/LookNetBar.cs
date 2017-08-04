@@ -34,6 +34,7 @@ namespace LookMyNet
             this.MinToTaskbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.RightClickMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,9 +47,10 @@ namespace LookMyNet
             this.textBox_Down.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox_Down.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_Down.Enabled = false;
-            this.textBox_Down.Location = new System.Drawing.Point(40, 14);
+            this.textBox_Down.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox_Down.Location = new System.Drawing.Point(28, 14);
             this.textBox_Down.Name = "textBox_Down";
-            this.textBox_Down.Size = new System.Drawing.Size(66, 14);
+            this.textBox_Down.Size = new System.Drawing.Size(77, 16);
             this.textBox_Down.TabIndex = 1;
             this.textBox_Down.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
             this.textBox_Down.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
@@ -58,9 +60,10 @@ namespace LookMyNet
             this.textBox_Up.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox_Up.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_Up.Enabled = false;
-            this.textBox_Up.Location = new System.Drawing.Point(145, 14);
+            this.textBox_Up.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox_Up.Location = new System.Drawing.Point(133, 14);
             this.textBox_Up.Name = "textBox_Up";
-            this.textBox_Up.Size = new System.Drawing.Size(66, 14);
+            this.textBox_Up.Size = new System.Drawing.Size(78, 16);
             this.textBox_Up.TabIndex = 2;
             this.textBox_Up.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseDown);
             this.textBox_Up.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LookNetBar_MouseMove);
@@ -85,24 +88,36 @@ namespace LookMyNet
             this.MinToTaskbarToolStripMenuItem.Name = "MinToTaskbarToolStripMenuItem";
             this.MinToTaskbarToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.MinToTaskbarToolStripMenuItem.Text = "缩小到任务栏";
+            this.MinToTaskbarToolStripMenuItem.Click += new System.EventHandler(this.MinToTaskbarToolStripMenuItem_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("黑体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.label1.Location = new System.Drawing.Point(5, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
+            this.label1.Size = new System.Drawing.Size(24, 15);
             this.label1.TabIndex = 3;
-            this.label1.Text = "下行";
+            this.label1.Text = "↓";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("黑体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.ForeColor = System.Drawing.Color.Red;
             this.label2.Location = new System.Drawing.Point(110, 13);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.Size = new System.Drawing.Size(24, 15);
             this.label2.TabIndex = 3;
-            this.label2.Text = "上行";
+            this.label2.Text = "↑";
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "网速监控";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
             // 
             // LookNetBar
             // 
@@ -149,6 +164,8 @@ namespace LookMyNet
             //默认位置在屏幕右下角
             this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width;
             this.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
+
+            this.notifyIcon1.Visible = false;
 
             monitor = new MyNetWorkMonitor();
             //获得控制器MyNetWorkMonitor上所有计算机的适配器列表
@@ -228,7 +245,19 @@ namespace LookMyNet
             this.Close();
             this.Dispose();
         }
+        
         //缩小到任务栏
+        private void MinToTaskbarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            this.notifyIcon1.Visible = true;
+        }
+
+        private void notifyIcon1_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.notifyIcon1.Visible = false;
+        }
 
         #endregion
     }
